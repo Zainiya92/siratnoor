@@ -42,6 +42,12 @@ class QuizScreen extends StatelessWidget {
     final question =
         controller.selectedQuestions[controller.currentQuestionIndex.value];
 
+    String toArabicNumber(int number) {
+      const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      final digits = number.toString().split('');
+      return digits.map((d) => arabicNumbers[int.parse(d)]).join();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -56,7 +62,9 @@ class QuizScreen extends StatelessWidget {
         ),
         // Options with Radio Buttons
         Column(
-          children: question["options"].map<Widget>((option) {
+          children: question["options"].asMap().entries.map<Widget>((entry) {
+            final index = entry.key;
+            final option = entry.value;
             return Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -73,6 +81,8 @@ class QuizScreen extends StatelessWidget {
                       controller.selectedOption.value = value!;
                     },
                   ),
+                  Text(toArabicNumber(index + 1),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
             );

@@ -22,6 +22,43 @@ class TValidator {
     return null;
   }
 
+  static String? validateNoDigits(String fieldName, String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return '$fieldName cannot be empty';
+    }
+    final hasDigits = RegExp(r'\d').hasMatch(value);
+    if (hasDigits) {
+      return '$fieldName cannot contain numbers';
+    }
+    return null;
+  }
+
+  static String? validateOnlyLetters(String fieldName, String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return '$fieldName is required';
+    }
+
+    // Check for only letters and no spaces
+    final regex = RegExp(r'^[A-Za-z]+$');
+    if (!regex.hasMatch(value)) {
+      return '$fieldName must contain only letters (no spaces or symbols)';
+    }
+    return null;
+  }
+
+  static String? validatePhoneNumberStartsWithZero(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Phone number cannot be empty';
+    }
+    if (!RegExp(r'^0\d*$').hasMatch(value)) {
+      return 'Phone number must start with 0';
+    }
+    if (!RegExp(r'^\d+$').hasMatch(value)) {
+      return 'Phone number must contain only digits';
+    }
+    return null;
+  }
+
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required.';

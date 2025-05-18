@@ -18,6 +18,19 @@ class DuaController extends GetxController {
   void onInit() {
     fetchDuas();
     super.onInit();
+    flutterTts.setStartHandler(() {
+      isSpeaking.value = true;
+    });
+
+    flutterTts.setCompletionHandler(() {
+      currentSpeakingId.value = null; // Clear current speaking ID when done
+      isSpeaking.value = false;
+    });
+
+    flutterTts.setErrorHandler((msg) {
+      currentSpeakingId.value = null;
+      isSpeaking.value = false;
+    });
   }
 
   void fetchDuas() async {
@@ -62,23 +75,25 @@ class DuaController extends GetxController {
     filteredCategories.assignAll(filtered);
   }
 
-  Future<void> speakText(String text, {String languageCode = "ar-SA"}) async {
+  final currentSpeakingId = RxnString();
+
+  Future<void> speakText(String text,
+      {required String id, String languageCode = "ar-SA"}) async {
     try {
-      isSpeaking.value = true;
+      currentSpeakingId.value = id;
       await flutterTts.setLanguage(languageCode);
       await flutterTts.setSpeechRate(0.5);
       await flutterTts.setPitch(1.0);
       await flutterTts.speak(text);
     } catch (e) {
       print("TTS error: $e");
-    } finally {
-      isSpeaking.value = false;
+      currentSpeakingId.value = null;
     }
   }
 
   Future<void> stopSpeaking() async {
     await flutterTts.stop();
-    isSpeaking.value = false;
+    currentSpeakingId.value = null;
   }
 
   @override

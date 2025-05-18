@@ -30,12 +30,16 @@ class TSignUpForm extends StatelessWidget {
                 child: TextFormField(
                   controller: controller.firstname,
                   validator: (value) =>
-                      TValidator.vaildationEmptyText('First Name', value),
+                      TValidator.validateOnlyLetters('First Name', value),
                   expands: false,
                   decoration: InputDecoration(
                     labelText: TTexts.firstName,
                     labelStyle: Theme.of(context).textTheme.labelSmall,
                     prefixIcon: const Icon(Iconsax.user),
+                    errorStyle: const TextStyle(
+                      fontSize: 12, // smaller font size for error text
+                      color: Colors.red, // default error color
+                    ),
                   ),
                 ),
               ),
@@ -47,11 +51,17 @@ class TSignUpForm extends StatelessWidget {
                   expands: false,
                   controller: controller.lastname,
                   validator: (value) =>
-                      TValidator.vaildationEmptyText('Last Name', value),
+                      TValidator.validateOnlyLetters('Last Name', value),
                   decoration: InputDecoration(
                     labelText: TTexts.lastName,
                     labelStyle: Theme.of(context).textTheme.labelSmall,
-                    prefixIcon: const Icon(Iconsax.user),
+                    prefixIcon: const Icon(
+                      Iconsax.user,
+                    ),
+                    errorStyle: const TextStyle(
+                      fontSize: 12, // smaller font size for error text
+                      color: Colors.red, // default error color
+                    ),
                   ),
                 ),
               ),
@@ -95,11 +105,15 @@ class TSignUpForm extends StatelessWidget {
             expands: false,
             controller: controller.username,
             validator: (value) =>
-                TValidator.vaildationEmptyText('User Name', value),
+                TValidator.validateOnlyLetters('User Name', value),
             decoration: InputDecoration(
               labelText: TTexts.username,
               labelStyle: Theme.of(context).textTheme.labelSmall,
               prefixIcon: const Icon(Iconsax.user_edit),
+              errorStyle: const TextStyle(
+                fontSize: 12, // smaller font size for error text
+                color: Colors.red, // default error color
+              ),
             ),
           ),
           const SizedBox(
@@ -114,6 +128,10 @@ class TSignUpForm extends StatelessWidget {
               labelText: TTexts.email,
               labelStyle: Theme.of(context).textTheme.labelSmall,
               prefixIcon: const Icon(Iconsax.direct),
+              errorStyle: const TextStyle(
+                fontSize: 12, // smaller font size for error text
+                color: Colors.red, // default error color
+              ),
             ),
           ),
           const SizedBox(
@@ -123,11 +141,16 @@ class TSignUpForm extends StatelessWidget {
           TextFormField(
             expands: false,
             controller: controller.phonenumber,
-            validator: (value) => TValidator.validatePhoneNumber(value),
+            validator: (value) =>
+                TValidator.validatePhoneNumberStartsWithZero(value),
             decoration: InputDecoration(
               labelText: TTexts.phoneNo,
               labelStyle: Theme.of(context).textTheme.labelSmall,
               prefixIcon: const Icon(Iconsax.call),
+              errorStyle: const TextStyle(
+                fontSize: 12, // smaller font size for error text
+                color: Colors.red, // default error color
+              ),
             ),
           ),
           const SizedBox(
@@ -148,6 +171,10 @@ class TSignUpForm extends StatelessWidget {
                   labelText: "Firqa",
                   labelStyle: Theme.of(context).textTheme.labelSmall,
                   prefixIcon: const Icon(Iconsax.book),
+                  errorStyle: const TextStyle(
+                    fontSize: 12, // smaller font size for error text
+                    color: Colors.red, // default error color
+                  ),
                 ),
                 onChanged: (value) {
                   controller.religion.value = value ?? '';
@@ -169,6 +196,10 @@ class TSignUpForm extends StatelessWidget {
                 labelText: TTexts.password,
                 labelStyle: Theme.of(context).textTheme.labelSmall,
                 prefixIcon: const Icon(Iconsax.password_check),
+                errorStyle: const TextStyle(
+                  fontSize: 12, // smaller font size for error text
+                  color: Colors.red, // default error color
+                ),
                 suffixIcon: IconButton(
                   onPressed: () => controller.hidepassword.value =
                       !controller.hidepassword.value,

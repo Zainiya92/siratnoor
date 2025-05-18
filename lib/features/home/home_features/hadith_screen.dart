@@ -127,8 +127,9 @@ class HadithScreen extends StatelessWidget {
                               return IconButton(
                                 icon: Icon(
                                   isSpeaking
-                                      ? Icons.volume_off
-                                      : Icons.volume_up,
+                                      ? Icons.volume_up
+                                      : Icons
+                                          .volume_off, // ✅ correct icon logic
                                   color: Colors.green,
                                 ),
                                 onPressed: () {

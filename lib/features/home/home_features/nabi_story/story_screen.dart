@@ -12,6 +12,15 @@ class StoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int extractStoryNumber(String title) {
+      final regex = RegExp(r'کہانی\s*(\d+)');
+      final match = regex.firstMatch(title);
+      if (match != null) {
+        return int.tryParse(match.group(1)!) ?? 0;
+      }
+      return 0;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Stories"),
@@ -29,10 +38,22 @@ class StoryScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)));
         }
 
+        // Copy and sort stories safely
+        final sortedStories =
+            List<Map<String, dynamic>>.from(storyController.stories);
+
+        sortedStories.sort((a, b) {
+          final aTitle = a['title']?.toString() ?? '';
+          final bTitle = b['title']?.toString() ?? '';
+          final aNum = extractStoryNumber(aTitle);
+          final bNum = extractStoryNumber(bTitle);
+          return aNum.compareTo(bNum);
+        });
+
         return ListView.builder(
-          itemCount: storyController.stories.length,
+          itemCount: sortedStories.length,
           itemBuilder: (context, index) {
-            final story = storyController.stories[index];
+            final story = sortedStories[index];
             return Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -46,18 +67,22 @@ class StoryScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
+                            story['title'] ?? '',
                             textAlign: TextAlign.right,
-                            story['title'],
                             style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         Obx(() {
-                          final isSpeaking = speakController.isSpeaking.value;
+                          final isSpeaking =
+                              speakController.currentSpeakingId.value ==
+                                  story['title'];
                           return IconButton(
                             icon: Icon(isSpeaking
-                                ? Icons.volume_off
-                                : Icons.volume_up),
+                                ? Icons.volume_up
+                                : Icons.volume_off),
                             onPressed: () {
                               if (isSpeaking) {
                                 speakController.stopSpeaking();
@@ -71,7 +96,7 @@ class StoryScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(story['content']),
+                    Text(story['content'] ?? ''),
                   ],
                 ),
               ),

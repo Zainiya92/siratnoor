@@ -92,6 +92,9 @@ class DuaScreen extends StatelessWidget {
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     children: duas.map((dua) {
+                      final id = dua['id']
+                          .toString(); // Make sure each dua has a unique ID
+
                       return Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
@@ -112,6 +115,8 @@ class DuaScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 8),
+
+                              // Arabic (description) + speaker
                               Row(
                                 children: [
                                   Expanded(
@@ -123,16 +128,36 @@ class DuaScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(Icons.volume_up,
-                                        color: Colors.teal),
-                                    onPressed: () => controller.speakText(
-                                        dua['description'] ?? '',
-                                        languageCode: "ar-SA"),
-                                  )
+                                  Obx(() {
+                                    final isSpeaking =
+                                        controller.currentSpeakingId.value ==
+                                            "${id}_ar";
+                                    return IconButton(
+                                      icon: Icon(
+                                        isSpeaking
+                                            ? Icons.volume_up
+                                            : Icons.volume_off,
+                                        color: Colors.teal,
+                                      ),
+                                      onPressed: () {
+                                        if (isSpeaking) {
+                                          controller.stopSpeaking();
+                                        } else {
+                                          controller.speakText(
+                                            dua['description'] ?? '',
+                                            id: "${id}_ar",
+                                            languageCode: "ar-SA",
+                                          );
+                                        }
+                                      },
+                                    );
+                                  }),
                                 ],
                               ),
+
                               const SizedBox(height: 8),
+
+                              // Translation + speaker
                               Row(
                                 children: [
                                   Expanded(
@@ -144,15 +169,33 @@ class DuaScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(Icons.volume_up,
-                                        color: Colors.teal),
-                                    onPressed: () => controller.speakText(
-                                        dua['translation'] ?? '',
-                                        languageCode: "ur-PK"),
-                                  )
+                                  Obx(() {
+                                    final isSpeaking =
+                                        controller.currentSpeakingId.value ==
+                                            "${id}_tr";
+                                    return IconButton(
+                                      icon: Icon(
+                                        isSpeaking
+                                            ? Icons.volume_up
+                                            : Icons.volume_off,
+                                        color: Colors.teal,
+                                      ),
+                                      onPressed: () {
+                                        if (isSpeaking) {
+                                          controller.stopSpeaking();
+                                        } else {
+                                          controller.speakText(
+                                            dua['translation'] ?? '',
+                                            id: "${id}_tr",
+                                            languageCode: "ur-PK",
+                                          );
+                                        }
+                                      },
+                                    );
+                                  }),
                                 ],
                               ),
+
                               const SizedBox(height: 8),
                               if (dua['reference'] != null &&
                                   dua['reference'].toString().isNotEmpty)
